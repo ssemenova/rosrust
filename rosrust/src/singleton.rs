@@ -49,9 +49,9 @@ pub fn try_init_with_options(name: &str, capture_sigint: bool) -> Result<()> {
     let client = Ros::new(name)?;
     if capture_sigint {
         let shutdown_sender = client.shutdown_sender();
-        ctrlc::set_handler(move || {
-            shutdown_sender.shutdown();
-        })?;
+        // ctrlc::set_handler(move || {
+        //     shutdown_sender.shutdown();
+        // })?;
     }
     *ros = Some(client);
     Ok(())

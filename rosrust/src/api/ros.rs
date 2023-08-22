@@ -40,7 +40,7 @@ pub struct Ros {
     name: String,
     clock: Arc<dyn Clock>,
     static_subs: Vec<Subscriber>,
-    logger: Arc<Mutex<Option<Publisher<Log>>>>,
+    // logger: Arc<Mutex<Option<Publisher<Log>>>>,
     shutdown_manager: Arc<ShutdownManager>,
 }
 
@@ -83,7 +83,7 @@ impl Ros {
             ros.clock = ros_clock;
         }
 
-        *ros.logger.lock().unwrap() = Some(ros.publish("/rosout", 100)?);
+        // *ros.logger.lock().unwrap() = Some(ros.publish("/rosout", 100)?);
 
         Ok(ros)
     }
@@ -108,10 +108,11 @@ impl Ros {
         let name = format!("{}/{}", namespace, name);
         let resolver = Resolver::new(&name)?;
 
-        let logger = Arc::new(Mutex::new(None));
+        // let logger = Arc::new(Mutex::new(None));
         let shutdown_manager = Arc::new(ShutdownManager::new({
-            let logger = Arc::clone(&logger);
-            move || drop(logger.lock().unwrap().take())
+            // let logger = Arc::clone(&logger);
+            // move || drop(logger.lock().unwrap().take())
+            || {}
         }));
 
         let param_cache = Arc::new(Mutex::new(Default::default()));
@@ -136,7 +137,7 @@ impl Ros {
             name,
             clock: Arc::new(RealClock::default()),
             static_subs: Vec::new(),
-            logger,
+            // logger,
             shutdown_manager,
         })
     }
@@ -413,12 +414,12 @@ impl Ros {
             function: String::default(),
             topics,
         };
-        let maybe_logger = self.logger.lock().unwrap();
-        if let Some(logger) = maybe_logger.deref() {
-            if let Err(err) = logger.send(message) {
-                error!("Logging error: {}", err);
-            }
-        }
+        // let maybe_logger = self.logger.lock().unwrap();
+        // if let Some(logger) = maybe_logger.deref() {
+        //     if let Err(err) = logger.send(message) {
+        //         error!("Logging error: {}", err);
+        //     }
+        // }
     }
 
     pub fn log_once(&self, level: i8, msg: String, file: &str, line: u32) {
